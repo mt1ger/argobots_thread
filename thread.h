@@ -137,13 +137,12 @@ namespace stdx
 				xwargs_ptr = new xthread_wrapper_args_t<mytype_, Args...>;
 				xwargs_ptr->func_ = func_in;
 				xwargs_ptr->tuple_ = std::make_tuple(args...);
-				ptr_= xwargs_ptr;
+				xwargs_ptr_ = xwargs_ptr;
 
 				/* Initializing pools, schedulors and ESs in singleton class */
 				/* And offer a handler to reach the resources for this ULT */
 				ABT_xstream_self_rank(&rank);
 				ABT_pool target_pool = psingleton->pools[rank]; 
-				// xthread_wrapper<mytype_, Args...> (&())
 				flag = ABT_thread_create(target_pool, xthread_wrapper<mytype_, Args...>, xwargs_ptr,
 						ABT_THREAD_ATTR_NULL, &__id.ult);
 			}
@@ -155,7 +154,8 @@ namespace stdx
 
 			~thread() 
 			{
-				free(ptr_); 
+				free(xwargs_ptr_); 
+				xwargs_ptr_= NULL;
 			}
 
 			void join ();
@@ -167,8 +167,8 @@ namespace stdx
 			thread& operator=(thread&& other);
 
 		private:
+			void* xwargs_ptr_;
 			id __id;
-			void* ptr_;
 	};
 
 	ostream& operator<<(ostream& __out, thread::id id2);

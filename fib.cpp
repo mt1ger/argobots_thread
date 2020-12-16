@@ -10,8 +10,8 @@
 #include"thread.h"
 
 // #define THREAD
-// #define XTHREAD
-#define XTHREAD_D
+#define XTHREAD
+// #define XTHREAD_D
 // #define RAW_ABT_THREAD
 
 using namespace std;
@@ -169,6 +169,13 @@ double test (int a, double b)
 }
 
 
+void as (void* ptr) 
+{
+	fibonacci_arg_t* fptr = (fibonacci_arg_t*) ptr;	
+	fptr->ret = fptr->n  * fptr->n;
+}
+
+
 int main (int argc, char * argv[])
 {
 
@@ -295,6 +302,17 @@ int main (int argc, char * argv[])
 	#endif
 
 	/* TEST BLOCK */
+	stdx::thread t1;
+	fibonacci_arg_t test_arg = {5, 0};
+	t1 = stdx::thread (as, &test_arg);
+	t1.join ();
+	cout << test_arg.ret << endl;
+    //
+	stdx::thread t2;
+	t2 = stdx::thread (test, 1, 21.5);
+	t2. join ();
+
+
 	// start = chrono::steady_clock::now();
     //
 	// fibonacci_arg_t arg_d = {n, 0};
