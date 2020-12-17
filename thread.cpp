@@ -3,6 +3,11 @@
 
 #include "thread.h"
 
+stdx::thread::thread() noexcept 
+{
+	xwargs_ptr_ = nullptr;
+}
+
 stdx::thread::thread (thread&& other) 
 {
 	swap (other);

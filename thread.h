@@ -37,7 +37,7 @@ namespace stdx
 			thread_Singleton* psingleton;
 
 			/* default constructor */
-			thread_d () noexcept {}
+			thread_d () noexcept {};
 
 			/* constructor with parameters */
 			template<class Fn, class ...Args>
@@ -121,7 +121,7 @@ namespace stdx
 			thread_Singleton* psingleton;
 
 			/* default constructor */
-			thread () noexcept {}
+			thread () noexcept; 
 
 			/* constructor with parameters */
 			template<class Fn, class ...Args>
