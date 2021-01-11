@@ -147,24 +147,25 @@ namespace stdx
 						ABT_THREAD_ATTR_NULL, &__id.ult);
 			}
 
-			thread (thread&& other);
-			thread (thread&) = delete;
-			thread (const thread&) = delete;
-			thread (const thread&&) = delete;
+			thread(thread&& other);
+			thread(thread&) = delete;
+			thread(const thread&) = delete;
+			thread(const thread&&) = delete;
 
 			~thread() 
 			{
 				free(xwargs_ptr_); 
-				xwargs_ptr_= NULL;
+				xwargs_ptr_ = NULL;
 			}
 
-			void join ();
+			void join();
 			void detach();
-			bool joinable ();
-			id get_id () const noexcept;
+			bool joinable();
+			id get_id() const noexcept;
 			void swap(thread & other);
 
 			thread& operator=(thread&& other);
+			thread& operator=(const thread& other)=delete;
 
 		private:
 			void* xwargs_ptr_;

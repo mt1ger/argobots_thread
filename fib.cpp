@@ -9,8 +9,8 @@
 
 #include"thread.h"
 
-// #define THREAD
-#define XTHREAD
+#define THREAD
+// #define XTHREAD
 // #define XTHREAD_D
 // #define RAW_ABT_THREAD
 
@@ -254,8 +254,8 @@ int main (int argc, char * argv[])
 	fibonacci_arg_t arg;
 	chrono::steady_clock::time_point start = chrono::steady_clock::now();
 
-	// for (int i = 0; i < 100; i++) 
-	// {
+	for (int i = 0; i < 100; i++) 
+	{
 		arg = {n, 0};
 		/* raw ABT_thread */
 		#ifdef RAW_ABT_THREAD
@@ -276,7 +276,7 @@ int main (int argc, char * argv[])
 		#ifdef XTHREAD_D
 		fibonacci_xthread_d(&arg);
 		#endif
-	// }
+	}
 
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 	chrono::duration<double> time_span = chrono::duration_cast<chrono::duration<double> >(end-start);
