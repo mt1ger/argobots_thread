@@ -95,9 +95,4 @@ noexcept
 { return !(id1 < id2);}
 
 
-void stdx::thread_d::wait () 
-{
-	ABT_eventual_wait(eventual, nullptr);
-}
-
 #endif

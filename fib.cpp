@@ -9,10 +9,10 @@
 
 #include"thread.h"
 
-#define THREAD
+// #define THREAD
 // #define XTHREAD
-// #define XTHREAD_D
 // #define RAW_ABT_THREAD
+// To enable thread_d, uncomment TEST macro in thread.h
 
 using namespace std;
 
@@ -25,29 +25,28 @@ typedef struct {
     int ret;
 } fibonacci_arg_t;
 
-std::mutex mtx_global;
 
 #ifdef THREAD
 void fibonacci_thread(void *arg)
 {
-    int n = ((fibonacci_arg_t *)arg)->n;
-    int *p_ret = &((fibonacci_arg_t *)arg)->ret;
+	int n = ((fibonacci_arg_t *)arg)->n;
+	int *p_ret = &((fibonacci_arg_t *)arg)->ret;
 
-    if (n <= 1) {
-        *p_ret = 1;
-    } 
+	if (n <= 1) {
+		*p_ret = 1;
+	} 
 	else {
-        fibonacci_arg_t child1_arg = {n - 1, 0};
-        fibonacci_arg_t child2_arg = {n - 2, 0};
+		fibonacci_arg_t child1_arg = {n - 1, 0};
+		fibonacci_arg_t child2_arg = {n - 2, 0};
 
 		std::thread threads (fibonacci_thread, &child1_arg);
 
-        /* Calculate fib(n - 2).  We do not create another ULT. */
-        fibonacci_thread(&child2_arg);
+		/* Calculate fib(n - 2).  We do not create another ULT. */
+		fibonacci_thread(&child2_arg);
 
 		threads.join();
 
-        *p_ret = child1_arg.ret + child2_arg.ret;
+		*p_ret = child1_arg.ret + child2_arg.ret;
     }
 }
 #endif
@@ -105,31 +104,6 @@ void fibonacci_xthread(void *arg)
 }
 #endif
 
-#ifdef XTHREAD_D
-void fibonacci_xthread_d(void *arg)
-{
-    int n = ((fibonacci_arg_t *)arg)->n;
-    int *p_ret = &((fibonacci_arg_t *)arg)->ret;
-
-    if (n <= 1) {
-        *p_ret = 1;
-    } 
-	else {
-        fibonacci_arg_t child1_arg = {n - 1, 0};
-        fibonacci_arg_t child2_arg = {n - 2, 0};
-
-		stdx::thread_d threads (fibonacci_xthread_d, &child1_arg);
-
-        /* Calculate fib(n - 2).  We do not create another ULT. */
-        fibonacci_xthread_d(&child2_arg);
-
-		threads.wait();
-
-        *p_ret = child1_arg.ret + child2_arg.ret;
-    }
-}
-#endif
-
 int fibonacci_seq(int n)
 {
     if (n <= 1) {
@@ -148,31 +122,10 @@ int fibonacci_seq(int n)
 }
 
 
-class Half 
+void test1(int a)
 {
-	public:
-		Half(){}; 
-		~Half(){}; 
-
-		int operator() (int x) 
-		{
-			cout << x /2 << endl;
-			return x/ 2;
-		}
-};
-
-
-double test (int a, double b)  
-{
-	cout << "a + b " << a + b << endl;
-	return a + b;
-}
-
-
-void as (void* ptr) 
-{
-	fibonacci_arg_t* fptr = (fibonacci_arg_t*) ptr;	
-	fptr->ret = fptr->n  * fptr->n;
+	sleep(2);
+	cout << "input a is " << a << endl;
 }
 
 
@@ -207,11 +160,6 @@ int main (int argc, char * argv[])
 	fibonacci_arg_t temp = {3, 0};
 	fibonacci_xthread (&temp);
 	#endif
-	#ifdef XTHREAD_D 
-	fibonacci_arg_t temp = {3, 0};
-	fibonacci_xthread_d (&temp);
-	#endif
-
 
 
 	/* Used to Initialize raw ABT_thread */
@@ -271,11 +219,6 @@ int main (int argc, char * argv[])
 		#ifdef XTHREAD
 		fibonacci_xthread(&arg);
 		#endif
-
-		/* For anounymous xthread */
-		#ifdef XTHREAD_D
-		fibonacci_xthread_d(&arg);
-		#endif
 	}
 
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
@@ -301,8 +244,28 @@ int main (int argc, char * argv[])
     free(scheds);
 	#endif
 
+
+
+	// stdx::thread_d t1 (test1, 5);	
+	// cout << t1.get_id() << endl;
+	// t1.detach();
+	// cout << t1.get_id() << endl;
+	// stdx::thread t1 (test1, 5);
+	// stdx::thread t1;
+	// cout << t1.get_id() << endl;
+	//
+	// t1 = stdx::thread(test1, 5);
+	// cout << t1.get_id() << endl;
+
+	
+
 	/* TEST BLOCK */
-	stdx::thread t1;
+	// stdx::thread t1 (test1, 5);
+	// while(www == 0) 
+	// {
+	// 	cout << "AAAAAAAAA" << endl;
+	// }
+	// t1.join();
 	// fibonacci_arg_t test_arg = {5, 0};
 	// t1 = stdx::thread (as, &test_arg);
 	// t1.join ();

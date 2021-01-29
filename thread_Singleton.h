@@ -12,7 +12,8 @@ class thread_Singleton
 {
 
 	int num_xstreams = 0;	
-	static thread_Singleton * tsingleton_ptr;
+	// static thread_Singleton * tsingleton_ptr;
+	inline static thread_Singleton * tsingleton_ptr = nullptr;
 	ABT_xstream * xstreams;
 	ABT_sched* scheds; 
 
